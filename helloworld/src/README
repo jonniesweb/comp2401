@@ -1,0 +1,36 @@
+*******************************************************************************
+
+           Jonathan Simpson ***REMOVED*** - COMP 2401 A - Assignment 1
+              
+*******************************************************************************
+
+
+Preamble
+--------
+
+This program/assignment is a single file. the a1Defs.h and ciphertext.txt file
+are hardcoded into the a1.c file. The program takes the hardcoded ciphertext and
+decrypts it, outputting the cleartext to standard out.
+
+
+More Functionality
+------------------
+
+An attempt was made to include command line arguments, but at the last moment
+the author unfortunately realized that the parser of command line arguments
+parses by digit and not by number. The code and accompanying functions for this
+is still included. 
+
+
+Compilation Command
+-------------------
+
+gcc -std=c99 -o a1 a1.c
+
+
+Launching and Operating Instructions
+------------------------------------
+
+No user input needed. Just run the program.
+
+eg: ./a1
