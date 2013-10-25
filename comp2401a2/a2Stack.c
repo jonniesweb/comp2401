@@ -1,17 +1,10 @@
-/*
- * a2Stack.c
- *
- *  Created on: Oct 18, 2013
- *      Author: jon
- */
-
 #include <stdio.h>
 #include <string.h>
 
 #include "a2Defs.h"
 
-/*   Function:  dumpStack
-/*         in:  stack to be output
+/*   Function:  dumpStack                     */
+/*         in:  stack to be output            */
 /*    Purpose:  output stack to screen        */
 
 void dumpStack(StackType *stk)
@@ -30,8 +23,8 @@ void dumpStack(StackType *stk)
   printf("     -------- END OF STACK --------\n\n");
 }
 
-/*   Function:  dumpVar
-/*         in:  variable to be output
+/*   Function:  dumpVar                       */
+/*         in:  variable to be output         */
 /*    Purpose:  output variable to screen     */
 
 void dumpVar(VarType *var)
@@ -54,9 +47,9 @@ void dumpVar(VarType *var)
   }
 }
 
-/*   Function:  dumpBytes
-/*         in:  byte array to be output
-/*         in:  number of bytes in byte array
+/*   Function:  dumpBytes                     */
+/*         in:  byte array to be output       */
+/*         in:  number of bytes in byte array */
 /*    Purpose:  output byte array as hex      */
 
 void dumpBytes(char *b, int n)
@@ -69,9 +62,9 @@ void dumpBytes(char *b, int n)
   printf("\n");
 }
 
-/*   Function:  convertToBytes
-/*         in:  int to be converted to byte array
-/*        out:  resulting byte array
+/*   Function:  convertToBytes                     */
+/*         in:  int to be converted to byte array  */
+/*        out:  resulting byte array               */
 /*    Purpose:  separate int into 4 bytes          */
 
 void convertToBytes(int num, unsigned char *bytes)
@@ -91,26 +84,19 @@ void convertToBytes(int num, unsigned char *bytes)
   }
 }
 
-/*   Function:  getNumBytes
-/*         in:  data type whose num of bytes is returned
-/*        ret:  size of data type
+/*   Function:  getNumBytes                              */
+/*         in:  data type whose num of bytes is returned */
+/*        ret:  size of data type                        */
 /*    Purpose:  return number of bytes in given type     */
 
 int getNumBytes(DataType dt)
 {
   switch(dt) {
-//    case C_INT:     return 4;
-//    case C_SHORT:   return 2;
-//    case C_CHAR:    return 1;
-//    case C_FLOAT:   return 4;
-//    case C_INT_PTR: return 4;
-
-  // give better values that work with both 32/64 bit systems
-  case C_INT:     return sizeof(int);
-  case C_SHORT:   return sizeof(short);
-  case C_CHAR:    return 1;
-  case C_FLOAT:   return sizeof(float);
-  case C_INT_PTR: return sizeof(int);
+    case C_INT:     return 4;
+    case C_SHORT:   return 2;
+    case C_CHAR:    return 1;
+    case C_FLOAT:   return 4;
+    case C_INT_PTR: return 4;
   }
 
 }
@@ -129,4 +115,3 @@ unsigned char clearBit(unsigned char c, int n)
 {
   return (c & (~(1 << n)));
 }
-
