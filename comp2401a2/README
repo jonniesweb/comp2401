@@ -1,0 +1,42 @@
+*******************************************************************************
+
+           Jonathan Simpson ***REMOVED*** - COMP 2401 A - Assignment 2
+              
+*******************************************************************************
+
+
+Preamble
+--------
+
+This program asks the user to input up to 100 integers to then find the sum of
+it all either via recursion or iteration. The callstack information is displayed
+before the resulting sum is shown.
+
+
+Compilation Command
+-------------------
+
+  gcc -o a2 a2.c a2loop.c a2Stack.c
+
+
+Launching and Operating Instructions
+------------------------------------
+
+Run the program with the following command:
+
+  ./a2
+
+Input up to 100 integers, each integer followed by a newline (return key). Enter
+either the 'r' character or 'i' character to find the sum of the entered
+integers using recursive or iterative summation, respectively.
+
+
+Files Included
+--------------
+
+Root Dir
+ |-> a2.c
+ |-> a2loop.c
+ |-> a2Stack.c
+ |-> a2Defs.h
+ |-> README

@@ -1,8 +1,8 @@
-#define MAX_FRAMES    32
-#define MAX_PARMS      5
+#define MAX_FRAMES   100
+#define MAX_PARMS      3
 #define MAX_STR       32
 #define MAX_BYTES      4
-#define MAX_ARR_SIZE  16
+#define MAX_ARR_SIZE 100
 #define C_OK           0
 #define C_NOK         -1
 
@@ -11,22 +11,22 @@ typedef enum {C_INT, C_SHORT, C_CHAR, C_FLOAT, C_INT_PTR} DataType;
 /*  Stack related data types  */
 
 typedef struct VarType {
-	char name[32];
+	char name[MAX_STR];
 	int value;
 	DataType dType;
 
 } VarType;
 
 typedef struct FrameType {
-	char funcName[20];
+	char funcName[MAX_STR];
 	int numParms;
-	VarType parms[200];
+	VarType parms[MAX_PARMS];
 
 } FrameType;
 
 typedef struct StackType {
 	int numFrames;
-	FrameType frames[200];
+	FrameType frames[MAX_FRAMES];
 
 } StackType;
 
