@@ -28,7 +28,7 @@ all: comp2401a2
 comp2401a2: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C Linker'
-	gcc -m32  -o "comp2401a2" $(OBJS) $(USER_OBJS) $(LIBS)
+	gcc  -o "comp2401a2" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
