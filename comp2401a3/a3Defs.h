@@ -1,10 +1,14 @@
-#define MAX_PARMS      5
+#define MAX_PARMS      3
 #define MAX_STR       32
 #define MAX_BYTES      4
 
-#define MAX_ARR_SIZE  16
+#define MAX_ARR_SIZE 5
+#define TRUE		   1
+
 #define C_OK           0
 #define C_NOK         -1
+#define ERR_VARTYPE_PARAMETER_OUT_OF_BOUNDS -2
+
 
 /*  Stack related data types  */
 

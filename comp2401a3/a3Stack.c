@@ -8,13 +8,41 @@
 /*         in:  stack to be output            */
 /*    Purpose:  output stack to screen        */
 
-void dumpStack(StackType *stk)
-{
+void dumpStack(StackType *stack) {
 
+	FrameNodeType *node;
+	node = stack->head;
+
+	int i, j = 0;
   printf("     ------------ STACK -----------\n");
 
+  while (node != NULL) {
+
+	  printf("     ---------- FRAME #%d:  %s ----------\n", j, node->data->funcName);
+	  for(i = 0; i < node->data->numParms; i++) {
+		  printf("     -- Parm #%d:\n", i);
+		  dumpVar(&(node->data->parms[i]));
+	  }
+
+	  node = node->next;
+	  j++;
+  }
 
   printf("     -------- END OF STACK --------\n\n");
+
+
+//  int i, j;
+//
+//  printf("     ------------ STACK -----------\n");
+//
+//  for (i=0; i<stk->numFrames; ++i) {
+//    printf("     ---------- FRAME #%d:  %s ----------\n", i, stk->frames[i].funcName);
+//    for (j=0; j<stk->frames[i].numParms; ++j) {
+//      printf("     -- Parm #%d:\n", j);
+//      dumpVar(&(stk->frames[i].parms[j]));
+//    }
+//  }
+//  printf("     -------- END OF STACK --------\n\n");
 }
 
 /*   Function:  dumpVar                       */

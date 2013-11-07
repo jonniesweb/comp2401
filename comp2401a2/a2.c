@@ -104,7 +104,7 @@ void enterSumFunc(StackType *stkPtr, char *fname, int num, int *arr, int *sum) {
 
 	// set VarType for num
 	strcpy(stkPtr->frames[stkPtr->numFrames].parms[0].name, "num");
-	stkPtr->frames[stkPtr->numFrames].parms[0].value = num; //TODO add &sum
+	stkPtr->frames[stkPtr->numFrames].parms[0].value = num;
 	stkPtr->frames[stkPtr->numFrames].parms[0].dType = C_INT;
 
 	// set VarType for arr
