@@ -1,0 +1,51 @@
+*******************************************************************************
+
+           Jonathan Simpson ***REMOVED*** - COMP 2401 A - Assignment 3
+              
+*******************************************************************************
+
+
+Preamble
+--------
+
+This program asks the user to input up to 100 integers to then find the sum of
+it all either via recursion or iteration. The function call stack is implemented
+as a linked list. The function call stack is written to a file named
+"a3output.txt" (lame .txt extension), then exits.
+
+
+Compilation Command
+-------------------
+
+  gcc -o a3 a3.c a3loop.c a3Stack.c
+
+
+Launching and Operating Instructions
+------------------------------------
+
+Run the program with the following command:
+
+  ./a3
+
+Input up to 100 integers, each integer followed by a newline (return key). Enter
+either the 'r' character or 'i' character to find the sum of the entered
+integers using recursive or iterative summation, respectively. The sum is
+displayed in stdout while the function call stack is written to a3output.txt in
+the running directory of a3.
+
+
+Bonus Features
+--------------
+
+  - Added different return values for errors that occur in the program
+
+
+Files Included
+--------------
+
+Root Dir
+ |-> a3.c
+ |-> a3loop.c
+ |-> a3Stack.c
+ |-> a3Defs.h
+ |-> README

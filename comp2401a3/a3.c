@@ -2,24 +2,39 @@
  * a3.c
  *
  *  Created on: Nov 2, 2013
- *      Author: jon
+ *      Author: Jon Simpson
+ *
+ *  This program asks the user to input up to 100 integers to then find the sum
+ *  of it all either via recursion or iteration. The function call stack is
+ *  implemented as a linked list. The function call stack is written to a file
+ *  named "a3output.txt" (lame .txt extension), then exits.
  */
 
-#include "a3Defs.h"
-#include <stdlib.h>
-#include <string.h>
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#include "a3Defs.h"
+
+// Initialise global variable for writing to a file
+FILE *outputFile;
+
 
 /**
  * Helper function to initialise the function call stack
  *
- * @param stack
+ * @param stack The stack to initialise
  */
 void initStack(StackType** stack) {
 	*stack = (StackType *) malloc(sizeof(StackType));
 	(*stack)->head = 0;
 }
-
+/**
+ * Adds a new frame in LIFO order to the call stack.
+ *
+ * @param stack The stack to add the frame to
+ * @param frame The frame to add to the stack
+ */
 void push(StackType *stack, FrameType *frame) {
 
 	FrameNodeType *node;
@@ -49,18 +64,21 @@ void push(StackType *stack, FrameType *frame) {
 	}
 }
 
+/**
+ * Frees the dynamically allocated memory for the specified node
+ *
+ * @param node The node to deallocate
+ */
 void freeNode(FrameNodeType* node) {
-	int i;
-	for (i = 0; i < node->data->numParms; ++i) {
-		free(node->data->parms[i].name);
-	}
 	free(node->data);
 	free(node);
 }
 
 /**
- * Recursive helper function to free all Frame Nodes on the function call stack
- * @param node
+ * Recursive helper function to free all Frame Nodes on the function call stack.
+ * Passing the first node in the stack clears the entire stack.
+ *
+ * @param node The node to start deallocating nodes at
  */
 void freeAllNodes(FrameNodeType *node) {
 	if (node != NULL) {
@@ -69,6 +87,11 @@ void freeAllNodes(FrameNodeType *node) {
 	}
 }
 
+/**
+ * Removes from the stack the frame that was last added (LIFO)
+ *
+ * @param stack The stack to remove the frame from
+ */
 void pop(StackType *stack) {
 
 	FrameNodeType *node;
@@ -81,7 +104,7 @@ void pop(StackType *stack) {
 
 /**
  * Deallocate all the memory for the stack
- * @param stack
+ * @param stack The stack to deallocate
  */
 void cleanupStack(StackType *stack) {
 
@@ -90,28 +113,30 @@ void cleanupStack(StackType *stack) {
 	free(stack);
 }
 
-void initVarType(FrameType *frame, int varPosition, char *name, DataType dType,
-		int *value) {
+/**
+ * Helper method to assist initialising VarTypes
+ *
+ * @param vartype
+ * @param name
+ * @param dType
+ * @param value
+ */
+void initVarType(VarType *vartype, char *name, DataType dType, int *value) {
 
-	// error check to see if the varPosition variable will be out of bounds
-	if (varPosition < 0 || varPosition >= frame->numParms) {
-		exit(ERR_VARTYPE_PARAMETER_OUT_OF_BOUNDS);
-	}
-
-	frame->parms[varPosition].name = (char *) calloc(MAX_STR, sizeof(char));
-	strcpy(frame->parms[varPosition].name, name);
-	frame->parms[varPosition].dType = dType;
-	frame->parms[varPosition].value = (int) value;
+	strcpy(vartype->name, name);
+	vartype->dType = dType;
+	vartype->value = (int) value;
 }
 
 /**
  * Creates a new stack frame, fills the frame with data, pushes it onto the
- * stack, and dumps the stack to stdout.
- * @param stack
- * @param fname
- * @param num
- * @param arr
- * @param sum
+ * stack, and outputs the stack to a3output.txt
+ *
+ * @param stack The stack to add a frame to
+ * @param fname The name of the calling function
+ * @param num The first parameter
+ * @param arr The second parameter
+ * @param sum The third parameter
  */
 void enterSumFunc(StackType *stack, char *fname, int num, int *arr, int *sum) {
 
@@ -122,9 +147,9 @@ void enterSumFunc(StackType *stack, char *fname, int num, int *arr, int *sum) {
 	frame->funcName = fname;
 	frame->numParms = MAX_PARMS;
 
-	initVarType(frame, 0, "num", C_INT, num);
-	initVarType(frame, 1, "arr", C_INT_PTR, (int) arr);
-	initVarType(frame, 2, "sum", C_INT_PTR, (int) sum);
+	initVarType(&frame->parms[0], "num", C_INT, (int *) num);
+	initVarType(&frame->parms[1], "arr", C_INT_PTR, arr);
+	initVarType(&frame->parms[2], "sum", C_INT_PTR, sum);
 
 	// add to the stack
 	push(stack, frame);
@@ -133,15 +158,14 @@ void enterSumFunc(StackType *stack, char *fname, int num, int *arr, int *sum) {
 	dumpStack(stack);
 
 }
-
+/**
+ * Outputs the contents of the stack then pops the top frame off of the stack
+ * @param stack The stack to remove the frame from
+ */
 void leaveSumFunc(StackType *stack) {
 
-	// output stack to stdout
 	dumpStack(stack);
-
-	// pop off the last frame from the stack
 	pop(stack);
-
 }
 
 int main(void) {
@@ -149,6 +173,14 @@ int main(void) {
 	// declare function call stack
 	StackType *stack;
 	initStack(&stack);
+
+	// open the file to write to
+	outputFile = fopen("a3output.txt", "w");
+
+	if (!outputFile) {
+		printf("Error opening file\n");
+		exit(ERR_OPENING_FILE);
+	}
 
 	/*
 	 * Get a bunch of numbers from the user
@@ -159,6 +191,7 @@ int main(void) {
 	numArray = (int *) calloc(MAX_ARR_SIZE, sizeof(int));
 	int input, returnVal, counter = 0;
 
+	system("clear");
 	printf(
 			"Enter a number on each newline. Up to 100 integers can be entered.\nEnter 'r' or 'i' for recursive or iterative addition (i/r)\n");
 
@@ -185,7 +218,7 @@ int main(void) {
 
 	while (TRUE) {
 		printf(
-				"Enter 'i' for iterative addition or 'r' for recursive addition (i/r): ");
+				"Enter 'i' for iterative addition or 'r' for recursive addition (i/r):\n");
 
 		scanf("%c", &sumMethod); // get char from stdin
 
@@ -208,10 +241,14 @@ int main(void) {
 	printf("The sum of the numbers is %d\n", sum);
 
 	/*
-	 * Get ready to exit the program by cleaning the stack
+	 * Get ready to exit the program by cleaning the stack, freeing memory and
+	 * closing opened files
 	 */
 	cleanupStack(stack);
 	free(numArray);
+
+	// close outputFile
+	fclose(outputFile);
 
 	return C_OK;
 }

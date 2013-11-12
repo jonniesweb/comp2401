@@ -6,7 +6,7 @@
 
 /*   Function:  dumpStack                     */
 /*         in:  stack to be output            */
-/*    Purpose:  output stack to screen        */
+/*    Purpose:  output stack to outputFile stream        */
 
 void dumpStack(StackType *stack) {
 
@@ -14,13 +14,14 @@ void dumpStack(StackType *stack) {
 	node = stack->head;
 
 	int i, j = 0;
-  printf("     ------------ STACK -----------\n");
+  fprintf(outputFile, "     ------------ STACK -----------\n");
 
   while (node != NULL) {
 
-	  printf("     ---------- FRAME #%d:  %s ----------\n", j, node->data->funcName);
+
+	  fprintf(outputFile, "     ---------- FRAME #%d:  %s ----------\n", j, node->data->funcName);
 	  for(i = 0; i < node->data->numParms; i++) {
-		  printf("     -- Parm #%d:\n", i);
+		  fprintf(outputFile, "     -- Parm #%d:\n", i);
 		  dumpVar(&(node->data->parms[i]));
 	  }
 
@@ -28,41 +29,27 @@ void dumpStack(StackType *stack) {
 	  j++;
   }
 
-  printf("     -------- END OF STACK --------\n\n");
-
-
-//  int i, j;
-//
-//  printf("     ------------ STACK -----------\n");
-//
-//  for (i=0; i<stk->numFrames; ++i) {
-//    printf("     ---------- FRAME #%d:  %s ----------\n", i, stk->frames[i].funcName);
-//    for (j=0; j<stk->frames[i].numParms; ++j) {
-//      printf("     -- Parm #%d:\n", j);
-//      dumpVar(&(stk->frames[i].parms[j]));
-//    }
-//  }
-//  printf("     -------- END OF STACK --------\n\n");
+  fprintf(outputFile, "     -------- END OF STACK --------\n\n");
 }
 
 /*   Function:  dumpVar                       */
 /*         in:  variable to be output         */
-/*    Purpose:  output variable to screen     */
+/*    Purpose:  output variable to outputFile stream     */
 
 void dumpVar(VarType *var)
 {
   unsigned char bytes[MAX_BYTES];
   int nBytes;
 
-  printf("     ----  name:  %s\n", var->name);
+  fprintf(outputFile, "     ----  name:  %s\n", var->name);
 
   convertToBytes(var->value, bytes);
-  printf("     ---- value:  ");
+  fprintf(outputFile, "     ---- value:  ");
   nBytes = getNumBytes(var->dType);
   dumpBytes(bytes, nBytes);
 
   if (var->dType == C_INT_PTR) {
-    printf("     ----  ptee:  ");
+	  fprintf(outputFile, "     ----  ptee:  ");
     convertToBytes((int) *((int*)var->value), bytes);
     dumpBytes(bytes, MAX_BYTES);
   }
@@ -71,16 +58,16 @@ void dumpVar(VarType *var)
 /*   Function:  dumpBytes                     */
 /*         in:  byte array to be output       */
 /*         in:  number of bytes in byte array */
-/*    Purpose:  output byte array as hex      */
+/*    Purpose:  output byte array as hex to outputFile stream      */
 
 void dumpBytes(char *b, int n)
 {
   int k;
 
   for (k=n-1; k>=0; --k) {
-    printf("%02x ", (unsigned char)b[k]);
+	  fprintf(outputFile, "%02x ", (unsigned char)b[k]);
   }
-  printf("\n");
+  fprintf(outputFile, "\n");
 }
 
 /*   Function:  convertToBytes                     */
@@ -144,11 +131,11 @@ void printChar(char x)
 
   for (i=7; i>=0; i--) {
     if (((x & (1 << i)) >> i) == 0)
-      printf("0");
+    	fprintf(outputFile, "0");
     else
-      printf("1");
+    	fprintf(outputFile, "1");
     if (i%4 == 0)
-      printf(" ");
+    	fprintf(outputFile, " ");
   }
 }
 
@@ -158,10 +145,10 @@ void printInt(int x)
 
   for (i=31; i>=0; i--) {
     if (((x & (1 << i)) >> i) == 0)
-      printf("0");
+    	fprintf(outputFile, "0");
     else
-      printf("1");
+    	fprintf(outputFile, "1");
     if (i%4 == 0)
-      printf(" ");
+    	fprintf(outputFile, " ");
   }
 }

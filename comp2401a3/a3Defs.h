@@ -2,20 +2,24 @@
 #define MAX_STR       32
 #define MAX_BYTES      4
 
-#define MAX_ARR_SIZE 5
+#define MAX_ARR_SIZE 100
 #define TRUE		   1
 
+// Return values
 #define C_OK           0
 #define C_NOK         -1
-#define ERR_VARTYPE_PARAMETER_OUT_OF_BOUNDS -2
+#define ERR_VARTYPE_PARAMETER_OUT_OF_BOUNDS 1
+#define ERR_OPENING_FILE 2
 
+// Define global variable for file output
+extern FILE *outputFile;
 
 /*  Stack related data types  */
 
 typedef enum {C_INT, C_SHORT, C_CHAR, C_FLOAT, C_INT_PTR} DataType;
 
 typedef struct {
-  char     *name;
+  char     name[MAX_STR]; // changed since Christine mentioned that its alright to do this
   DataType dType;
   int      value;
 } VarType;
