@@ -1,11 +1,31 @@
 #define MAX_STR       32
 #define MAX_BYTES      4
+#define OK			   0
+#define NOK			   1
 
 /*  Movie list related data types  */
 
 typedef enum {C_COMEDY, C_DRAMA, C_ACTION, C_HORROR,
               C_SF, C_ADVENTURE, C_WESTERN} GenreType;
 
+typedef struct {
+	char title[MAX_STR];
+	int year;
+	GenreType genre;
+} MovieType;
+
+typedef struct MovieNodeType MovieNodeType;
+
+typedef struct MovieNodeType {
+	MovieNodeType *next;
+	MovieNodeType *prev;
+	MovieType *data;
+} MovieNodeType;
+
+typedef struct {
+	MovieNodeType *head;
+	MovieNodeType *tail;
+} MovieList;
 
 
 /*  Movie list related functions  */
