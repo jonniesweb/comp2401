@@ -8,7 +8,8 @@
 #ifndef A4STACK_H_
 #define A4STACK_H_
 
-void add(MovieList *, MovieNodeType *);
+void add(MovieNodeType **, MovieNodeType *);
+void removeNode(MovieNodeType *);
 
 
 #endif /* A4STACK_H_ */

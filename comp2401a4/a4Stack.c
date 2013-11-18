@@ -5,24 +5,23 @@
  *      Author: jon
  */
 
-#include <stdlib.h>
+//#include <stdlib.h>
 #include <string.h>
+
 #include "a4Defs.h"
 
-void addToTail(MovieList* list, MovieNodeType* node) {
-	// add to the end
-	list->tail->next = node;
-	node->prev = list->tail;
-	node->next = NULL;
-	list->tail = node;
-}
+//void addToTail(MovieNodeType** list, MovieNodeType* node) {
+//	// add to the end
+//	node->prev = list->tail;
+//	node->next = NULL;
+//}
 
-void addToHead(MovieList *list, MovieNodeType *node) {
-	node->next = list->head;
-	node->prev = NULL;
-	list->head->prev = node;
-	list->head = node;
-}
+//void addToHead(MovieList *list, MovieNodeType *node) {
+//	node->next = list->head;
+//	node->prev = NULL;
+//	list->head->prev = node;
+//	list->head = node;
+//}
 
 void addToRight(MovieNodeType *node, MovieNodeType *newNode) {
 	newNode->next = node->next;
@@ -38,22 +37,21 @@ void addToLeft(MovieNodeType *node, MovieNodeType *newNode) {
 	newNode->next = node;
 }
 
-void addToEmptyList(MovieList* list, MovieNodeType* node) {
-	list->head = node;
-	list->tail = node;
+void addToEmptyList(MovieNodeType** list, MovieNodeType* node) {
+	*list = node;
 	node->prev = NULL;
 	node->next = NULL;
 }
 
-int add(MovieList *list, MovieNodeType *node) {
+int add(MovieNodeType** list, MovieNodeType *node) {
 
 	// If list is empty
-	if (list->head == NULL && list->tail == NULL) {
+	if (*list == NULL) {
 		addToEmptyList(list, node);
 		return OK;
 
 	} else {
-		MovieNodeType *current = list->head;
+		MovieNodeType *current = *list;
 		do {
 			int comparison = strcmp(node->data->title, current->data->title);
 			if (comparison > 0) {
@@ -61,8 +59,11 @@ int add(MovieList *list, MovieNodeType *node) {
 
 				if (current->next == NULL) {
 					// add to the end
-					addToTail(list, node);
+					current->next = node;
+					node->next = NULL;
+					node->prev = current;
 					return OK;
+
 				} else {
 					current = current->next;
 					continue;
@@ -70,13 +71,14 @@ int add(MovieList *list, MovieNodeType *node) {
 
 				// if the titles are equal
 			} else if (comparison == 0) {
-//				addToRight(current, node);
-//				return OK; // TODO remove when below is implemented
 				// compare the years
-
-				if (current->data->year > node->data->year) { // XXX will fuck up probably
+				if (current->data->year > node->data->year) {
 					if (current->prev == NULL) {
-						addToHead(list, node);
+						// add to beginning
+						node->next = *list;
+						node->prev = NULL;
+						*list = node;
+
 					} else {
 						addToLeft(current, node);
 					}
@@ -84,10 +86,16 @@ int add(MovieList *list, MovieNodeType *node) {
 				}
 				current = current->next;
 				continue;
+
 			} else if (comparison < 0) {
+
 				if (current->prev == NULL) {
-					addToHead(list, node);
+					current->prev = node;
+					node->next = current;
+					node->prev = NULL;
+					*list = node;
 					return OK;
+
 				} else {
 					addToLeft(current, node);
 					return OK;
@@ -100,6 +108,13 @@ int add(MovieList *list, MovieNodeType *node) {
 	return NOK;
 }
 
+/*
+ * Test function for a4Stack.c
+ */
+#if 0
+#include <stdio.h>
+#include <stdlib.h>
+
 void initNode(MovieNodeType** node, char *title, GenreType genre, int year) {
 	*node = (MovieNodeType*) malloc(sizeof(MovieNodeType));
 	(*node)->data = (MovieType*) malloc(sizeof(MovieType));
@@ -108,19 +123,11 @@ void initNode(MovieNodeType** node, char *title, GenreType genre, int year) {
 	(*node)->data->year = year;
 }
 
-//int findByTitle(MovieList *list, char *title) {
-//
-//}
 
-#if 1
-#include <stdio.h>
 
 int main(void) {
 
-	MovieList *list = (MovieList *) malloc(sizeof(MovieList));
-
-	list->head = NULL;
-	list->tail = NULL;
+	MovieNodeType *list = NULL;
 
 	MovieNodeType *a;
 	MovieNodeType *b;
@@ -130,15 +137,15 @@ int main(void) {
 	initNode(&b, "a", C_HORROR, 1984);
 	initNode(&c, "a", C_SF, 2013);
 
-	add(list, c);
-	add(list, b);
-	add(list, a);
+	add(&list, c);
+	add(&list, b);
+	add(&list, a);
 
 
 	/*
 	 * Output list
 	 */
-	MovieNodeType *current = list->head;
+	MovieNodeType *current = list;
 	while (current != NULL) {
 		printf("%s : %d\n", current->data->title, current->data->year);
 		current = current->next;
