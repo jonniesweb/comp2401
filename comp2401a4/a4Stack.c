@@ -7,21 +7,14 @@
 
 //#include <stdlib.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "a4Defs.h"
 
-//void addToTail(MovieNodeType** list, MovieNodeType* node) {
-//	// add to the end
-//	node->prev = list->tail;
-//	node->next = NULL;
-//}
-
-//void addToHead(MovieList *list, MovieNodeType *node) {
-//	node->next = list->head;
-//	node->prev = NULL;
-//	list->head->prev = node;
-//	list->head = node;
-//}
+void freeNodeAndData(MovieNodeType *node) {
+	free(node->data);
+	free(node);
+}
 
 void addToRight(MovieNodeType *node, MovieNodeType *newNode) {
 	newNode->next = node->next;
@@ -108,6 +101,40 @@ int add(MovieNodeType** list, MovieNodeType *node) {
 	return NOK;
 }
 
+int removeByName(MovieNodeType **list, char *title) {
+
+	MovieNodeType *current = *list;
+
+	while (current != NULL) {
+		int compare = strcmp(current->data->title, title);
+		if (compare == 0) {
+
+			// if removing from the beginning
+			if (current->prev == NULL) {
+				*list = current->next;
+			} else {
+				current->prev->next = current->next;
+			}
+
+			// if removing from the end
+			if (current->next != NULL) {
+				current->next->prev = current->prev;
+			}
+			current->next = NULL;
+			current->prev = NULL;
+
+			freeNodeAndData(current);
+
+			return OK;
+
+		} else {
+			current = current->next;
+		}
+	}
+
+	return NOK;
+}
+
 /*
  * Test function for a4Stack.c
  */
@@ -122,8 +149,6 @@ void initNode(MovieNodeType** node, char *title, GenreType genre, int year) {
 	strcpy((*node)->data->title, title);
 	(*node)->data->year = year;
 }
-
-
 
 int main(void) {
 
@@ -141,7 +166,6 @@ int main(void) {
 	add(&list, b);
 	add(&list, a);
 
-
 	/*
 	 * Output list
 	 */
@@ -153,6 +177,5 @@ int main(void) {
 
 	return 0;
 }
-
 
 #endif

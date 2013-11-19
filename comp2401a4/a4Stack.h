@@ -10,6 +10,7 @@
 
 void add(MovieNodeType **, MovieNodeType *);
 void removeNode(MovieNodeType *);
-
+void freeNodeAndData(MovieNodeType *);
+int removeByName(MovieNodeType **, char *);
 
 #endif /* A4STACK_H_ */
