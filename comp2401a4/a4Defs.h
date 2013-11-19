@@ -17,16 +17,10 @@ typedef struct {
 typedef struct MovieNodeType MovieNodeType;
 
 typedef struct MovieNodeType {
+	MovieType *data;
 	MovieNodeType *next;
 	MovieNodeType *prev;
-	MovieType *data;
 } MovieNodeType;
-
-typedef struct {
-	MovieNodeType *head;
-	MovieNodeType *tail;
-} MovieList;
-
 
 /*  Movie list related functions  */
 void mainMenu(int*);
