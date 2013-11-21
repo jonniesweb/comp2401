@@ -12,4 +12,4 @@ a4Stack.o:	a4Stack.c a4Defs.h
 	$(GCC) -c a4Stack.c
 
 clean:
-	rm -vf *.o a4
+	rm -vf *.o a4 a4output.txt
