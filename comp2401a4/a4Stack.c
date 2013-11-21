@@ -2,14 +2,18 @@
  * a4Stack.c
  *
  *  Created on: Nov 14, 2013
- *      Author: jon
+ *      Author: Jon Simpson
  */
 
-//#include <stdlib.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
 
 #include "a4Defs.h"
+
+void freeNode(MovieNodeType *node) {
+	free(node);
+}
 
 void freeNodeAndData(MovieNodeType *node) {
 	free(node->data);
@@ -36,12 +40,15 @@ void addToEmptyList(MovieNodeType** list, MovieNodeType* node) {
 	node->next = NULL;
 }
 
-int add(MovieNodeType** list, MovieNodeType *node) {
+void addToMovieList(MovieNodeType** list, MovieType *movie) {
+
+	MovieNodeType *node = malloc(sizeof(MovieNodeType));
+	node->data = movie;
 
 	// If list is empty
 	if (*list == NULL) {
 		addToEmptyList(list, node);
-		return OK;
+		return;
 
 	} else {
 		MovieNodeType *current = *list;
@@ -55,7 +62,7 @@ int add(MovieNodeType** list, MovieNodeType *node) {
 					current->next = node;
 					node->next = NULL;
 					node->prev = current;
-					return OK;
+					return;
 
 				} else {
 					current = current->next;
@@ -75,7 +82,7 @@ int add(MovieNodeType** list, MovieNodeType *node) {
 					} else {
 						addToLeft(current, node);
 					}
-					return OK;
+					return;
 				}
 				current = current->next;
 				continue;
@@ -87,18 +94,17 @@ int add(MovieNodeType** list, MovieNodeType *node) {
 					node->next = current;
 					node->prev = NULL;
 					*list = node;
-					return OK;
+					return;
 
 				} else {
 					addToLeft(current, node);
-					return OK;
+					return;
 				}
 			}
 
 		} while (1);
 	}
 
-	return NOK;
 }
 
 int removeByName(MovieNodeType **list, char *title) {

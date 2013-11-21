@@ -1,7 +1,17 @@
+/*
+ * a4Defs.h
+ *
+ *  Created on: Nov 14, 2013
+ *      Author: Jon Simpson
+ */
+
 #define MAX_STR       32
 #define MAX_BYTES      4
 #define OK			   0
 #define NOK			   1
+
+// define error outputs
+#define ERR_OPENING_FILE 2
 
 /*  Movie list related data types  */
 
@@ -21,6 +31,11 @@ typedef struct MovieNodeType {
 	MovieNodeType *next;
 	MovieNodeType *prev;
 } MovieNodeType;
+
+// memory freeing functions
+void freeNode(MovieNodeType*);
+void freeNodeAndData(MovieNodeType*);
+int removeByName(MovieNodeType**, char *);
 
 /*  Movie list related functions  */
 void mainMenu(int*);
@@ -42,3 +57,6 @@ void convertToBytes(int num, unsigned char *bytes);
 int  getIntBit(int, int);
 unsigned char setBit(unsigned char, int);
 unsigned char clearBit(unsigned char, int);
+
+// Define global variable for file output
+extern FILE *outputFile;
