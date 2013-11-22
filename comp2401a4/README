@@ -1,0 +1,110 @@
+*******************************************************************************
+
+           Jonathan Simpson ***REMOVED*** - COMP 2401 A - Assignment 4
+              
+*******************************************************************************
+
+
+Preamble
+--------
+
+This program manages a database of movies using a doubly-linked list. The user
+is presented a menu to select a slew of operations (add, delete, view,
+search-view, exit). Adding a movie requires entering the name, year and genre of
+the movie. Movies are sorted in chronological order based on title. If there
+are two or more movies with the same title then the matching movies are
+sorted by chronologically by their year.
+
+
+Compilation Command
+-------------------
+
+Run the following command in the root directory of the files:
+
+  make
+
+Run the following command to clear the generated build and runtime files:
+
+make clean
+
+
+Launching and Operating Instructions
+------------------------------------
+
+Run the program with the following command:
+
+  ./a4
+
+Adding a single or multiple movies to the database is done by entering 1 from
+the main menu, entering in how many movies you would like to add, then entering
+in the respective title, year and genre for each movie.
+
+Delete a movie that is in the database by entering 2 for "Delete a movie", then
+entering the full title of the movie to delete.
+
+Display all of the movies currently in the database by entering 3 for "List all
+movies" from the main menu.
+
+List all movies of a specific genre by entering 4 at the main menu for "List all
+movies by genre" and then entering the respective genre you are interested
+in showing.
+
+Exit the program by entering 0 for "Quit" at the main menu.
+
+A view of the doubly-linked list at various steps in the program is outputted
+to "a4output.txt" in the root directory.
+
+
+Bonus Features
+--------------
+
+  - Added ascii text art to the main menu of the program
+  - Added different return values for errors that occur in the program
+
+
+Files Included
+--------------
+
+Root Dir
+ |-> README
+ |-> Makefile
+ |-> a4.c
+ |-> a4List.c
+ |-> a4Defs.h
+ |-> testdata1  
+ |-> testdata2  
+ |-> testdata3  
+ |-> testdata4  
+ |-> testdata5   
+ |-> testdata6   
+ |-> testdata7   
+ |-> testdata8   
+ |-> testdata9   
+ |-> testdata10  
+ |-> testdata11  
+ |-> testdata12  
+ \-> testdata13  
+ 
+  
+TESTS (filename - purpose)
+--------------------------
+
+Tests are executed by piping in the test data into stdin via the terminal
+Example:
+
+  ./a4 < testdata3
+
+testdata1  - Adds a movie to an empty list
+testdata2  - Adds a movie to the beginning of the list
+testdata3  - Adds a movie to the end of the list
+testdata4  - Adds a movie inbetween two other movies
+testdata5  - Tries to delete an invalid movie
+testdata6  - Delete from the front of the list
+testdata7  - Delete from the back of the list
+testdata8  - Delete from the middle of the list
+testdata9  - Use an empty title for the movie name
+testdata10 - Add zero movies to the list
+testdata11 - Add -1 movies to the list
+testdata12 - Enter an invalid genre
+testdata13 - Enter an invalid year
+
