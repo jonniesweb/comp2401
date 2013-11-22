@@ -1,8 +1,10 @@
 /*
- * a4Stack.c
+ * a4List.c
  *
  *  Created on: Nov 14, 2013
  *      Author: Jon Simpson
+ *
+ * Contains various functions related to using a doubly-linked list
  */
 
 #include <stdlib.h>
@@ -11,15 +13,28 @@
 
 #include "a4Defs.h"
 
+/**
+ * Deallocates the passed node
+ * @param node Deallocates this node
+ */
 void freeNode(MovieNodeType *node) {
 	free(node);
 }
 
+/**
+ * Deallocates and frees the passed node
+ * @param node Deallocates this node and its data
+ */
 void freeNodeAndData(MovieNodeType *node) {
 	free(node->data);
 	free(node);
 }
 
+/**
+ * Adds newNode to the right of node
+ * @param node
+ * @param newNode
+ */
 void addToRight(MovieNodeType *node, MovieNodeType *newNode) {
 	newNode->next = node->next;
 	newNode->prev = node;
@@ -27,6 +42,11 @@ void addToRight(MovieNodeType *node, MovieNodeType *newNode) {
 	node->next = newNode;
 }
 
+/**
+ * Adds newNode to the left of node
+ * @param node
+ * @param newNode
+ */
 void addToLeft(MovieNodeType *node, MovieNodeType *newNode) {
 	node->prev->next = newNode;
 	newNode->prev = node->prev;
@@ -34,13 +54,26 @@ void addToLeft(MovieNodeType *node, MovieNodeType *newNode) {
 	newNode->next = node;
 }
 
+/**
+ * Properly adds a node to an empty list
+ * @param list
+ * @param node
+ */
 void addToEmptyList(MovieNodeType** list, MovieNodeType* node) {
 	*list = node;
 	node->prev = NULL;
 	node->next = NULL;
 }
 
+/**
+ * Adds the given movie to the list of movies
+ * @param list
+ * @param movie
+ */
 void addToMovieList(MovieNodeType** list, MovieType *movie) {
+
+	fprintf(outputFile, "* Entering addToMovieList *\n");
+	dumpList(*list);
 
 	MovieNodeType *node = malloc(sizeof(MovieNodeType));
 	node->data = movie;
@@ -48,6 +81,9 @@ void addToMovieList(MovieNodeType** list, MovieType *movie) {
 	// If list is empty
 	if (*list == NULL) {
 		addToEmptyList(list, node);
+
+		dumpList(*list);
+		fprintf(outputFile, "* Leaving addToMovieList *\n");
 		return;
 
 	} else {
@@ -62,6 +98,9 @@ void addToMovieList(MovieNodeType** list, MovieType *movie) {
 					current->next = node;
 					node->next = NULL;
 					node->prev = current;
+
+					dumpList(*list);
+					fprintf(outputFile, "* Leaving addToMovieList *\n");
 					return;
 
 				} else {
@@ -82,6 +121,9 @@ void addToMovieList(MovieNodeType** list, MovieType *movie) {
 					} else {
 						addToLeft(current, node);
 					}
+
+					dumpList(*list);
+					fprintf(outputFile, "* Leaving addToMovieList *\n");
 					return;
 				}
 				current = current->next;
@@ -98,6 +140,9 @@ void addToMovieList(MovieNodeType** list, MovieType *movie) {
 
 				} else {
 					addToLeft(current, node);
+
+					dumpList(*list);
+					fprintf(outputFile, "* Leaving addToMovieList *\n");
 					return;
 				}
 			}
@@ -105,40 +150,9 @@ void addToMovieList(MovieNodeType** list, MovieType *movie) {
 		} while (1);
 	}
 
-}
+	dumpList(*list);
+	fprintf(outputFile, "* Leaving addToMovieList *\n");
 
-int removeByName(MovieNodeType **list, char *title) {
-
-	MovieNodeType *current = *list;
-
-	while (current != NULL) {
-		int compare = strcmp(current->data->title, title);
-		if (compare == 0) {
-
-			// if removing from the beginning
-			if (current->prev == NULL) {
-				*list = current->next;
-			} else {
-				current->prev->next = current->next;
-			}
-
-			// if removing from the end
-			if (current->next != NULL) {
-				current->next->prev = current->prev;
-			}
-			current->next = NULL;
-			current->prev = NULL;
-
-			freeNodeAndData(current);
-
-			return OK;
-
-		} else {
-			current = current->next;
-		}
-	}
-
-	return NOK;
 }
 
 /*
