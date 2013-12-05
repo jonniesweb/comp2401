@@ -16,33 +16,60 @@
 #define SERVER_PORT 60002
 #define BUFFER_SIZE 120
 
+typedef enum {NONE, YES, NO, WIN} result;
+typedef enum {INVALID, ORACLE, GUESSER} gamemode;
+
 // global variable for keeping track of which signal was run
 // https://culearn.carleton.ca/moodle/mod/forum/discuss.php?d=64507
-volatile char action = 0;
+volatile result action = NONE;
 
 void sendMessage(int socket, char *buffer) {
 	send(socket, buffer, strlen(buffer), 0);
 }
 
 void handleYes(int i) {
-	action = 1;
+	action = YES;
 }
 
 void handleNo(int i) {
-	action = 2;
+	action = NO;
 }
 
 void handleWin(int i) {
-	action = 3;
+	action = WIN;
 }
 
-void receiveMessage(int socket) {
+void receiveGuess(int connection) {
 	int bytesRcv;
 	char buffer[BUFFER_SIZE];
 
-	bytesRcv = recv(socket, buffer, sizeof(buffer), 0);
+	bytesRcv = recv(connection, buffer, sizeof(buffer), 0);
 	buffer[bytesRcv] = 0;
-	printf("this is what the client sent:  %s\n", buffer);
+	printf("Question:  %s\n", buffer);
+}
+
+/**
+ * Used by guesser
+ * @param connection
+ * @return
+ */
+char receiveResult(int connection) {
+	int bytesRcv;
+	char buffer[BUFFER_SIZE];
+
+	bytesRcv = recv(connection, buffer, sizeof(buffer), 0);
+	buffer[bytesRcv] = 0;
+
+	if (strcmp(buffer, "Yes") == 0) { // yes condition
+		return YES;
+	} else if (strcmp(buffer, "No") == 0) { // no condition
+		return NO;
+	} else if (strcmp(buffer, "Win!") == 0) { // win condition
+		return WIN;
+	} else {
+		fputs("Received invalid response from Oracle", stderr);
+		return NONE;
+	}
 }
 
 void startGuesser(char *serverIp, int serverPort) {
@@ -107,28 +134,29 @@ void startGuesser(char *serverIp, int serverPort) {
  * @param clientSocket
  */
 char checkForSignal(int clientSocket) {
-	while (action == 0) {
+	while (action == NONE) {
 	}
 
 	switch (action) {
-	case 1:
+	case YES:
 		sendMessage(clientSocket, "Yes");
-		action = 0;
+		action = NONE;
 		return 0;
 		break;
-	case 2:
+	case NO:
 		sendMessage(clientSocket, "No");
-		action = 0;
+		action = NONE;
 		return 0;
 		break;
-	case 3:
+	case WIN:
 		sendMessage(clientSocket, "Win!");
-		action = 0;
+		action = NONE;
 		return 1;
 		break;
 	default:
 		break;
 	}
+	// TODO add a return
 }
 
 void enableSignals() {
@@ -222,39 +250,61 @@ int socketListener(int serverPort) {
 
 }
 
+void exitSequence(int connection, int exitStatus) {
+	close(connection);
+	exit(exitStatus);
+}
+
+void getGuess(char *result) {
+
+	fgets(result, BUFFER_SIZE, stdin);
+	result[strlen(result) - 1] = '\0';
+}
+
 int main(int argc, char **argv) {
-	int guesses = 0;
-	char gameState = -1; // set to invalid game state
+	int guesses = 0, result = 0;
+	gamemode gameState = INVALID; // set to invalid game state
+	int connection = 0;
 
 	if (argc == 1) { // no arguments, wait for connection, is oracle
-//		startOracle(SERVER_PORT);
-		int socket = socketListener(SERVER_PORT);
-		do {
-			receiveMessage(socket);
-			enableSignals();
-			int result = checkForSignal(socket);
-			disableSignals();
-
-			if (result == 0) { // increase guesses by 1
-				guesses++;
-			} else { // its a win!
-				guesses = 0;
-
-
-			}
-		} while (guesses < 20);
-		puts("Left");
-		close(socket);
+		connection = socketListener(SERVER_PORT);
+		gameState = ORACLE;
 
 	} else if (argc == 2) { // one argument, connect to given ip at default port, is guesser
 		startGuesser(argv[1], SERVER_PORT);
+		gameState = GUESSER;
 
 	} else if (argc == 3) { // two arguments, connect to given ip at given port, is guesser
 		startGuesser(argv[1], atoi(argv[2]));
+		gameState = GUESSER;
 
 	} else { // invalid arguments
 		puts("Invalid arguments");
 		return -1;
+	}
+
+	while (1) { // program loop
+		if (gameState == ORACLE) { // oracle
+			receiveGuess(connection);
+			enableSignals();
+			result = checkForSignal(connection);
+			disableSignals();
+
+		} else if (gameState == GUESSER) { // guesser
+			char guess[BUFFER_SIZE];
+			getGuess(guess);
+			sendMessage(connection, guess);
+			result = receiveGuess(connection);
+
+			if (result == 1) {
+
+			}
+
+		} else { // invalid game state
+			// quit the program
+			exitSequence(connection, -1);
+		}
+		close(socket);
 	}
 
 	return 0;
