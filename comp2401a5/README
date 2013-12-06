@@ -1,0 +1,78 @@
+*******************************************************************************
+
+           Jonathan Simpson ***REMOVED*** - COMP 2401 A - Assignment 5
+              
+*******************************************************************************
+
+         ___   ___     ____                  _   _                 
+        |__ \ / _ \   / __ \                | | (_)                
+           ) | | | | | |  | |_   _  ___  ___| |_ _  ___  _ __  ___ 
+          / /| | | | | |  | | | | |/ _ \/ __| __| |/ _ \| '_ \/ __|
+         / /_| |_| | | |__| | |_| |  __/\__ \ |_| | (_) | | | \__ \
+        |____|\___/   \___\_\\__,_|\___||___/\__|_|\___/|_| |_|___/                                                 
+
+
+
+Preamble
+--------
+
+This program allows you to play a game of 20 Questions with another user over
+a network, or on the same computer.
+
+
+Compilation Command
+-------------------
+
+Run the following command in the root directory of the files:
+
+  make
+
+Run the following command to clear the generated build and runtime files:
+
+  make clean
+
+
+Launching and Operating Instructions
+------------------------------------
+
+Run the program with the following command to start as the Oracle. A Guesser
+connects to you:
+
+  ./a5
+
+Run the program with the following command to start as the Guesser. You connect
+to the Oracle by filling in the IP address (Default port is 60002):
+
+  ./a5 ip
+  
+Run the program with the following command to start as the Oracle. You connect
+to the Oracle by filling in the IP address and port:
+
+  ./a5 ip port
+
+When a user is the Guesser, they have 20
+questions to ask the Oracle to try and find out the thing that the Oracle knows.
+When a user is the Oracle, they receive the Guesser's questions and either press
+Ctrl-C for an answer that is leading in the right direction, press Ctrl-Z for a
+wrong guess or press Ctrl-\ for a correct/winner response. The game ends (or
+continues) when either the Guesser runs out of their 20 guesses, or the guesser
+correctly guesses what the Oracle knows. The winner then gets to decide whether
+to continue playing the game (as the Oracle) or quit the game.
+
+
+
+
+Bonus Features
+--------------
+
+  - Added ascii text art to the start of the program
+  - Added different return values for errors that occur in the program
+
+
+Files Included
+--------------
+
+Root Dir
+ |-> README
+ |-> Makefile
+ \-> main.c  
